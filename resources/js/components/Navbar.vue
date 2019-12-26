@@ -18,9 +18,14 @@
         </ul>
 
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <router-link :to="{ name: 'questions' }" class="nav-link" active-class="active">
+                {{ $t('Questions') }}
+              </router-link>
+            </li>
           <!-- Authenticated -->
           <li v-if="user" class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-dark"
+            <a class="nav-link dropdown-toggle"
                href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             >
               <img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
