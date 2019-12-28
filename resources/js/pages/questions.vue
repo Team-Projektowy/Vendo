@@ -1,24 +1,48 @@
 <template>
   <div>
-    <h2>Questions</h2>
+    <h2 class="mb-4">Questions</h2>
 
-    <ul class="mt-3 list-group">
-      <li class="list-group-item" v-for="question in questions" v-bind:key="question.id">
-        {{ question.textOfQuestion }}
-      </li>
-    </ul>
+    <div v-for="question in questions" v-bind:key="question.id" class="card">
+      <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
+        <h5 class="mb-0">
+            {{ question.textOfQuestion }}
+        </h5>
+        <button @click="changeActive(question.id)" class="btn btn-link" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
+          <i class="fas" :class="{ 'fa-chevron-down': isActive != question.id, 'fa-chevron-up': isActive == question.id }"></i>
+        </button>
+      </div>
+
+      <div :id="'collapse' + question.id" class="collapse" :aria-labelledby="'heading' + question.id">
+        <div class="card-body">
+          <ul class="list-group">
+            <li class="list-group-item" :class="{'list-group-item-success': question.correctAnswer == '0'}">
+              {{ question.answerA }}
+            </li>
+            <li class="list-group-item" :class="{'list-group-item-success': question.correctAnswer == '1'}">
+              {{ question.answerB }}
+            </li>
+            <li class="list-group-item" :class="{'list-group-item-success': question.correctAnswer == '2'}">
+              {{ question.answerC }}
+            </li>
+            <li class="list-group-item" :class="{'list-group-item-success': question.correctAnswer == '3'}">
+              {{ question.answerD }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <div class="mt-3">
       <nav aria-label="Question list navigation">
         <ul class="pagination justify-content-center">
           <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-            <a @click="fetchQuestions(pagination.prev_page_url)" class="page-link" href="#" aria-label="Previous">
+            <a @click="fetchQuestions(pagination.prev_page_url)" class="page-link" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          <li class="page-item disabled"><a class="page-link tex-dark" href="#">Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
+          <li class="page-item disabled"><a class="page-link tex-dark">Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
           <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-            <a @click="fetchQuestions(pagination.next_page_url)" class="page-link" href="#" aria-label="Next">
+            <a @click="fetchQuestions(pagination.next_page_url)" class="page-link" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -55,7 +79,12 @@ export default {
         correctAnswer: ''
       },
       question_id: '',
-      pagination: {}
+      pagination: {},
+      isActive: null,
+
+      changeActive(index) {
+        this.isActive = this.isActive === index ?  null : index
+      }
     }
   },
 
@@ -84,7 +113,7 @@ export default {
       }
       this.pagination = pagination;
     }
-  }
+  },
 }
 </script>
 

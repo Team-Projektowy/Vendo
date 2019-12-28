@@ -15,6 +15,7 @@ $config = [
   <title>{{ config('app.name') }}</title>
 
   <link rel="stylesheet" href="{{ mix('dist/css/app.css') }}">
+  <script src="https://kit.fontawesome.com/54bb3e4cb8.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div id="app"></div>
