@@ -2,13 +2,19 @@
   <div>
     <h2 class="mb-4">Questions</h2>
 
+    <ul class="nav nav-tabs">
+    <li v-for="category in categories" :key="category" class="nav-item">
+      <a class="nav-link" :class="{ 'active': activeCategory == category }">{{ category }}</a>
+    </li>
+  </ul>
+
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
         <h5 class="mb-0">
             {{ question.textOfQuestion }}
         </h5>
         <button @click="changeActive(question.id)" class="btn btn-link" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
-          <i class="fas" :class="{ 'fa-chevron-down': isActive != question.id, 'fa-chevron-up': isActive == question.id }"></i>
+          <i class="fas" :class="{ 'fa-chevron-down': !activeQuestions.includes(question.id), 'fa-chevron-up': activeQuestions.includes(question.id) }"></i>
         </button>
       </div>
 
@@ -80,10 +86,19 @@ export default {
       },
       question_id: '',
       pagination: {},
-      isActive: null,
 
-      changeActive(index) {
-        this.isActive = this.isActive === index ?  null : index
+      activeQuestions: [],
+
+      categories: ['All', 'Animals', 'History', 'Geography', 'Chemistry', 'Art'],
+      activeCategory: 'All',
+
+      changeActive(questionId) {
+        let indexInArray = this.activeQuestions.indexOf(questionId);
+        if (indexInArray > -1) {
+          this.activeQuestions.splice(indexInArray, 1);
+        } else {
+          this.activeQuestions.push(questionId);
+        }
       }
     }
   },
