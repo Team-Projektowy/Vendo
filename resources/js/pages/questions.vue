@@ -3,10 +3,10 @@
     <h2 class="mb-4">Questions</h2>
 
     <ul class="nav nav-tabs">
-    <li v-for="category in categories" :key="category" class="nav-item">
-      <a class="nav-link" :class="{ 'active': activeCategory == category }">{{ category }}</a>
-    </li>
-  </ul>
+      <li v-for="category in categories" :key="category" class="nav-item">
+        <a class="nav-link" :class="{ 'active': activeCategory == category }" @click="fetchQuestionsByCategory(category)">{{ category }}</a>
+      </li>
+    </ul>
 
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
@@ -42,13 +42,13 @@
       <nav aria-label="Question list navigation">
         <ul class="pagination justify-content-center">
           <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-            <a @click="fetchQuestions(pagination.prev_page_url)" class="page-link" aria-label="Previous">
+            <a @click="fetchQuestionsByCategory(activeCategory, pagination.prev_page_url)" class="page-link" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
           <li class="page-item disabled"><a class="page-link tex-dark">Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
           <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-            <a @click="fetchQuestions(pagination.next_page_url)" class="page-link" aria-label="Next">
+            <a @click="fetchQuestionsByCategory(activeCategory, pagination.next_page_url)" class="page-link" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -65,7 +65,7 @@ export default {
   layout: 'default',
 
   metaInfo () {
-    return { title: this.$t('questions') }
+    return { title: this.$t('Questions') }
   },
 
   computed: mapGetters({
@@ -99,18 +99,22 @@ export default {
         } else {
           this.activeQuestions.push(questionId);
         }
-      }
+      },
     }
   },
 
   created() {
-    this.fetchQuestions();
+    this.fetchQuestionsByCategory(this.activeCategory);
   },
 
   methods: {
-    fetchQuestions(page_url) {
+    fetchQuestionsByCategory(category, page_url) {
+      this.activeCategory = category;
       let vm = this;
       page_url = page_url || '/api/questions';
+      if (category != 'All') {
+        page_url += '/' + category;
+      }
       fetch(page_url)
         .then(res => res.json())
         .then(res => {
@@ -119,6 +123,7 @@ export default {
         })
         .catch(err => console.log(err))
     },
+
     makePagination(meta, links) {
       let pagination = {
         current_page: meta.current_page,
@@ -126,9 +131,12 @@ export default {
         next_page_url: links.next,
         prev_page_url: links.prev
       }
+      if (pagination.last_page == null) {
+        pagination.last_page = 1;
+      }
       this.pagination = pagination;
     }
-  },
+  }
 }
 </script>
 

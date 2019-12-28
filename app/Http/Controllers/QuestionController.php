@@ -22,6 +22,13 @@ class QuestionController extends Controller
         return QuestionResource::collection($questions);
     }
 
+    public function indexByCategory($category)
+    {
+        $category = ucfirst($category);
+        $questions = Question::where('category', ucfirst($category))->simplePaginate(15);
+        return QuestionResource::collection($questions);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -66,6 +73,7 @@ class QuestionController extends Controller
         $question = Question::findOrFail($id);
         return new QuestionResource($question);
     }
+
     /**
      * Show the form for editing the specified resource.
      *
