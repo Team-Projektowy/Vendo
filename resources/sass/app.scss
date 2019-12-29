@@ -6,3 +6,16 @@
 @import 'elements/navbar';
 @import 'elements/buttons';
 @import 'elements/transitions';
+
+.form-control:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 0.2rem rgba(0, 200, 81, 0.25);
+}
+
+.nav-link {
+  color: var(--success);
+}
+
+.nav-link:hover {
+  color: #007E33;
+}

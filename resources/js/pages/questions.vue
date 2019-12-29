@@ -3,9 +3,9 @@
     <h2 class="mb-4">Questions</h2>
 
     <div class="d-flex justify-content-between align-items-center">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-tabs mb-1">
         <li v-for="category in categories" :key="category" class="nav-item">
-          <a class="nav-link" :class="{ 'active': activeCategory == category }" @click="fetchQuestionsByCategory(category)">{{ category }}</a>
+          <a :class="{ active: activeCategory == category }" @click="fetchQuestionsByCategory(category)" class="nav-link" href='#'>{{ category }}</a>
         </li>
       </ul>
       <div class="form-inline md-form form-sm mt-0">
@@ -17,12 +17,17 @@
 
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
-        <h5 class="mb-0">
+        <h6 class="mb-0">
             {{ question.textOfQuestion }}
-        </h5>
-        <button @click="changeActive(question.id)" class="btn btn-link" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
-          <i class="fas" :class="{ 'fa-chevron-down': !activeQuestions.includes(question.id), 'fa-chevron-up': activeQuestions.includes(question.id) }"></i>
-        </button>
+        </h6>
+        <div>
+          <button class="btn btn-link" style="color: var(--danger)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+          <button @click="changeActive(question.id)" class="btn btn-link" style="color: var(--success)" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
+            <i class="fas" :class="{ 'fa-chevron-down': !activeQuestions.includes(question.id), 'fa-chevron-up': activeQuestions.includes(question.id) }"></i>
+          </button>
+        </div>
       </div>
 
       <div :id="'collapse' + question.id" class="collapse" :aria-labelledby="'heading' + question.id">
