@@ -25,7 +25,13 @@ class QuestionController extends Controller
     public function indexByCategory($category)
     {
         $category = ucfirst($category);
-        $questions = Question::where('category', ucfirst($category))->simplePaginate(15);
+        $questions = Question::where('category', ucfirst($category))->paginate(15);
+        return QuestionResource::collection($questions);
+    }
+
+    public function indexBySearch($search)
+    {
+        $questions = Question::where('textOfQuestion', 'like', '%' . $search . '%')->paginate(15);
         return QuestionResource::collection($questions);
     }
 

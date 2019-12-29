@@ -2,11 +2,18 @@
   <div>
     <h2 class="mb-4">Questions</h2>
 
-    <ul class="nav nav-tabs">
-      <li v-for="category in categories" :key="category" class="nav-item">
-        <a class="nav-link" :class="{ 'active': activeCategory == category }" @click="fetchQuestionsByCategory(category)">{{ category }}</a>
-      </li>
-    </ul>
+    <div class="d-flex justify-content-between align-items-center">
+      <ul class="nav nav-tabs">
+        <li v-for="category in categories" :key="category" class="nav-item">
+          <a class="nav-link" :class="{ 'active': activeCategory == category }" @click="fetchQuestionsByCategory(category)">{{ category }}</a>
+        </li>
+      </ul>
+      <div class="form-inline md-form form-sm mt-0">
+        <i class="fas fa-search" aria-hidden="true"></i>
+        <input v-model="search" class="form-control form-control-sm ml-3" type="text" placeholder="Search" aria-label="Search">
+        <!-- @change="fetchQuestionsBySearch(searchComputed)" -->
+      </div>
+    </div>
 
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
@@ -42,13 +49,13 @@
       <nav aria-label="Question list navigation">
         <ul class="pagination justify-content-center">
           <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-            <a @click="fetchQuestionsByCategory(activeCategory, pagination.prev_page_url)" class="page-link" aria-label="Previous">
+            <a @click="fetchQuestions(pagination.prev_page_url)" class="page-link" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
           <li class="page-item disabled"><a class="page-link tex-dark">Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
           <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-            <a @click="fetchQuestionsByCategory(activeCategory, pagination.next_page_url)" class="page-link" aria-label="Next">
+            <a @click="fetchQuestions(pagination.next_page_url)" class="page-link" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -92,6 +99,8 @@ export default {
       categories: ['All', 'Animals', 'History', 'Geography', 'Chemistry', 'Art'],
       activeCategory: 'All',
 
+      search: '',
+
       changeActive(questionId) {
         let indexInArray = this.activeQuestions.indexOf(questionId);
         if (indexInArray > -1) {
@@ -107,7 +116,24 @@ export default {
     this.fetchQuestionsByCategory(this.activeCategory);
   },
 
+  computed: {
+    searchComputed: function() {
+      return this.search.replace(/\s+/g,' ')
+    }
+  },
+
   methods: {
+    fetchQuestions(page_url) {
+      let vm = this;
+      fetch(page_url)
+        .then(res => res.json())
+        .then(res => {
+          this.questions = res.data;
+          vm.makePagination(res.meta, res.links);
+        })
+        .catch(err => console.log(err))
+    },
+
     fetchQuestionsByCategory(category, page_url) {
       this.activeCategory = category;
       let vm = this;
@@ -135,6 +161,28 @@ export default {
         pagination.last_page = 1;
       }
       this.pagination = pagination;
+    },
+
+    fetchQuestionsBySearch(search) {
+      let vm = this;
+      if (search != "" && search != " ") {
+        let page_url = "/api/questions/bySearch/" + search;
+        fetch(page_url)
+          .then(res => res.json())
+          .then(res => {
+            this.questions = res.data;
+            vm.makePagination(res.meta, res.links);
+          })
+          .catch(err => console.log(err))
+      } else {
+        vm.fetchQuestionsByCategory(this.activeCategory);
+      }
+    }
+  },
+
+  watch: {
+    search: function() {
+      _.debounce(this.fetchQuestionsBySearch(this.search), 500);
     }
   }
 }

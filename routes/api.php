@@ -40,6 +40,7 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 Route::get('questions', 'QuestionController@index');
 Route::get('questions/{category}', 'QuestionController@indexByCategory');
+Route::get('questions/bySearch/{search}', 'QuestionController@indexBySearch');
 Route::get('question/{id}', 'QuestionController@show');
 Route::post('question', 'QuestionController@store');
 Route::put('question/{id}', 'QuestionController@update');
