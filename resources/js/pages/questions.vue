@@ -114,6 +114,7 @@ export default {
 
   created() {
     this.fetchQuestionsByCategory(this.activeCategory);
+    this.debouncedFetchQuestionBySearch = _.debounce(this.fetchQuestionsBySearch, 500);
   },
 
   computed: {
@@ -163,10 +164,10 @@ export default {
       this.pagination = pagination;
     },
 
-    fetchQuestionsBySearch(search) {
+    fetchQuestionsBySearch() {
       let vm = this;
-      if (search != "" && search != " ") {
-        let page_url = "/api/questions/bySearch/" + search;
+      if (this.search != "" && this.search != " ") {
+        let page_url = "/api/questions/bySearch/" + this.search;
         fetch(page_url)
           .then(res => res.json())
           .then(res => {
@@ -182,7 +183,7 @@ export default {
 
   watch: {
     search: function() {
-      _.debounce(this.fetchQuestionsBySearch(this.search), 500);
+      this.debouncedFetchQuestionBySearch()
     }
   }
 }

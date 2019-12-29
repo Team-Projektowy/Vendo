@@ -16,7 +16,6 @@ $config = [
 
   <link rel="stylesheet" href="{{ mix('dist/css/app.css') }}">
   <script src="https://kit.fontawesome.com/54bb3e4cb8.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 </head>
 <body>
   <div id="app"></div>
