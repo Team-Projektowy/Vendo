@@ -9,9 +9,17 @@
         </li>
       </ul>
       <div class="form-inline md-form form-sm mt-0">
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input v-model="search" class="form-control form-control-sm ml-3" type="text" placeholder="Search" aria-label="Search">
-        <!-- @change="fetchQuestionsBySearch(searchComputed)" -->
+        <div class="input-group mx-2">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </span>
+          </div>
+          <input v-model="search" class="form-control form-control" type="text" placeholder="Search" aria-label="Search">
+        </div>
+        <button class="btn btn-outline-success">
+          <i class="fas fa-plus"></i> Add
+        </button>
       </div>
     </div>
 
@@ -55,13 +63,13 @@
         <ul class="pagination justify-content-center">
           <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
             <a @click="fetchQuestions(pagination.prev_page_url)" class="page-link" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
+              <i class="fas fa-angle-double-left" aria-hidden="true"></i>
             </a>
           </li>
           <li class="page-item disabled"><a class="page-link tex-dark">Page {{pagination.current_page}} of {{pagination.last_page}}</a></li>
           <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
             <a @click="fetchQuestions(pagination.next_page_url)" class="page-link" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
+              <i class="fas fa-angle-double-right" aria-hidden="true"></i>
             </a>
           </li>
         </ul>
@@ -71,10 +79,10 @@
     <div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="deleteQuestionModalTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-header bg-dark text-light">
-            <h5 class="modal-title" id="deleteQuestionModalTitle">Delete question</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true" color="text-light">&times;</span>
+          <div class="modal-header bg-dark d-flex align-items-center">
+            <h5 class="modal-title text-light" id="deleteQuestionModalTitle">Delete question</h5>
+            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+              <i aria-hidden="true" class="fas fa-times"></i>
             </button>
           </div>
           <div class="modal-body py-3">
@@ -82,8 +90,8 @@
             {{ questionToDelete.textOfQuestion }}
           </div>
           <div class="modal-footer d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
-            <button @click="deleteQuestion()" type="button" class="btn btn-outline-success" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-success" data-dismiss="modal">No</button>
+            <button @click="deleteQuestion()" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
           </div>
         </div>
       </div>
