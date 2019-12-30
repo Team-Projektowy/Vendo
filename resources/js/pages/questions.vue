@@ -21,7 +21,7 @@
             {{ question.textOfQuestion }}
         </h6>
         <div>
-          <button class="btn btn-link" style="color: var(--danger)">
+          <button @click="setQuestionToDelete(question)" class="btn btn-link" style="color: var(--danger)" data-toggle="modal" data-target="#deleteQuestionModal">
             <i class="fas fa-trash-alt"></i>
           </button>
           <button @click="changeActive(question.id)" class="btn btn-link" style="color: var(--success)" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
@@ -67,6 +67,27 @@
         </ul>
       </nav>
     </div>
+
+    <div class="modal fade" id="deleteQuestionModal" tabindex="-1" role="dialog" aria-labelledby="deleteQuestionModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-light">
+            <h5 class="modal-title" id="deleteQuestionModalTitle">Delete question</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" color="text-light">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body py-3">
+            Are you sure you want to delete this question? <br>
+            {{ questionToDelete.textOfQuestion }}
+          </div>
+          <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-success" data-dismiss="modal">No</button>
+            <button @click="deleteQuestion()" type="button" class="btn btn-outline-success" data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -96,7 +117,7 @@ export default {
         answerD: '',
         correctAnswer: ''
       },
-      question_id: '',
+      // question_id: '',
       pagination: {},
 
       activeQuestions: [],
@@ -105,6 +126,8 @@ export default {
       activeCategory: 'All',
 
       search: '',
+      questionToDelete: {},
+      current_page_url: '',
 
       changeActive(questionId) {
         let indexInArray = this.activeQuestions.indexOf(questionId);
@@ -138,6 +161,7 @@ export default {
           vm.makePagination(res.meta, res.links);
         })
         .catch(err => console.log(err))
+      this.current_page_url = page_url;
     },
 
     fetchQuestionsByCategory(category, page_url) {
@@ -154,6 +178,7 @@ export default {
           vm.makePagination(res.meta, res.links);
         })
         .catch(err => console.log(err))
+        this.current_page_url = page_url;
     },
 
     makePagination(meta, links) {
@@ -180,9 +205,24 @@ export default {
             vm.makePagination(res.meta, res.links);
           })
           .catch(err => console.log(err))
+        this.current_page_url = page_url
       } else {
         vm.fetchQuestionsByCategory(this.activeCategory);
       }
+    },
+
+    setQuestionToDelete(questionToDelete) {
+      this.questionToDelete = questionToDelete;
+    },
+
+    deleteQuestion() {
+      fetch('/api/question/' + this.questionToDelete.id, {
+        method: 'delete'
+      })
+      .then(response => response.json())
+      .catch(err => console.log(err));
+
+      this.fetchQuestions(this.current_page_url)
     }
   },
 
