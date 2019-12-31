@@ -17,7 +17,7 @@
           </div>
           <input v-model="search" class="form-control form-control" type="text" placeholder="Search" aria-label="Search">
         </div>
-        <button class="btn btn-outline-success">
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#addQuestionModal">
           <i class="fas fa-plus"></i> Add
         </button>
       </div>
@@ -96,6 +96,38 @@
         </div>
       </div>
     </div>
+
+     <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addeQuestionModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-dark d-flex align-items-center">
+            <h5 class="modal-title text-light" id="addQuestionModalTitle">Add question</h5>
+            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+              <i aria-hidden="true" class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body py-3">
+            <form>
+              <label for="textOfQuestion">Question</label>
+              <input class="form-control mb-2" type="text" placeholder="Question" name="textOfQuestion">
+              <label for="category">Category</label>
+              <select class="form-control mb-2" name="category">
+                <option v-for="category in categoriesWithoutAll" v-bind:key="category" >{{ category }}</option>
+              </select>
+              <label>Answers</label>
+              <input class="form-control mb-1" type="text" placeholder="Answer 1" name="answerA">
+              <input class="form-control mb-1" type="text" placeholder="Answer 2" name="answerB">
+              <input class="form-control mb-1" type="text" placeholder="Answer 3" name="answerC">
+              <input class="form-control mb-1" type="text" placeholder="Answer 4" name="answerD">
+            </form>
+          </div>
+          <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success" data-dismiss="modal">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -156,6 +188,9 @@ export default {
   computed: {
     searchComputed: function() {
       return this.search.replace(/\s+/g,' ')
+    },
+    categoriesWithoutAll: function() {
+      return _.tail(this.categories);
     }
   },
 
