@@ -53,7 +53,7 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        $question = $request->isMethod("put") ? Question::findOrFail($request->id) : new Question;
+        $question = new Question;
 
         $question->textOfQuestion = $request->input('textOfQuestion');
         $question->answerA = $request->input('answerA');

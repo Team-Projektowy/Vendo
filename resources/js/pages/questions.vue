@@ -106,25 +106,44 @@
               <i aria-hidden="true" class="fas fa-times"></i>
             </button>
           </div>
-          <div class="modal-body py-3">
-            <form>
+          <form @submit.prevent="addQuestion">
+            <div class="modal-body py-3">
               <label for="textOfQuestion">Question</label>
-              <input class="form-control mb-2" type="text" placeholder="Question" name="textOfQuestion">
+              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
               <label for="category">Category</label>
-              <select class="form-control mb-2" name="category">
-                <option v-for="category in categoriesWithoutAll" v-bind:key="category" >{{ category }}</option>
+              <select v-model="question.category" class="form-control mb-2">
+                <option v-for="category in categoriesWithoutAll" v-bind:key="category">{{ category }}</option>
               </select>
               <label>Answers</label>
-              <input class="form-control mb-1" type="text" placeholder="Answer 1" name="answerA">
-              <input class="form-control mb-1" type="text" placeholder="Answer 2" name="answerB">
-              <input class="form-control mb-1" type="text" placeholder="Answer 3" name="answerC">
-              <input class="form-control mb-1" type="text" placeholder="Answer 4" name="answerD">
-            </form>
-          </div>
-          <div class="modal-footer d-flex justify-content-between">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-success" data-dismiss="modal">Submit</button>
-          </div>
+              <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
+              <input v-model="question.answerB" class="form-control mb-1" type="text" placeholder="Answer 2">
+              <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3">
+              <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4">
+              <label>Correct answer</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerA" value="0">
+                  <label class="form-check-label" for="radioAnswerA">A</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerB" value="1">
+                  <label class="form-check-label" for="radioAnswerB">B</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerC" value="2">
+                  <label class="form-check-label" for="radioAnswerC">C</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerD" value="3">
+                  <label class="form-check-label" for="radioAnswerD">D</label>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -266,6 +285,28 @@ export default {
       .catch(err => console.log(err));
 
       this.fetchQuestions(this.current_page_url)
+    },
+
+    addQuestion() {
+      fetch('/api/question', {
+        method: 'post',
+        body: JSON.stringify(this.question),
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        this.question.textOfQuestion = '';
+        this.question.category = '';
+        this.question.answerA = '';
+        this.question.answerB = '';
+        this.question.answerC = '';
+        this.question.answerD = '';
+        $("#addQuestionModal .close").click();
+        this.fetchQuestions(this.current_page_url);
+      })
+      .catch(err => console.log(err))
     }
   },
 
