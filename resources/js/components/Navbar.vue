@@ -20,7 +20,7 @@
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
               <router-link :to="{ name: 'questions' }" class="nav-link" active-class="active">
-                {{ $t('Questions') }}
+                {{ $t('questions') }}
               </router-link>
             </li>
           <!-- Authenticated -->

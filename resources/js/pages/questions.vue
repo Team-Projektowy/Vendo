@@ -106,21 +106,21 @@
               <i aria-hidden="true" class="fas fa-times"></i>
             </button>
           </div>
-          <form @submit.prevent="addQuestion">
+          <form @submit.prevent="addQuestion" action="\questions\store" method="POST">
             <div class="modal-body py-3">
               <label for="textOfQuestion">Question</label>
-              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
+              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question" name="textOfQuestion">
               <label for="category">Category</label>
               <select v-model="question.category" class="form-control mb-2">
                 <option v-for="category in categoriesWithoutAll" v-bind:key="category">{{ category }}</option>
               </select>
               <label>Answers</label>
-              <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
-              <input v-model="question.answerB" class="form-control mb-1" type="text" placeholder="Answer 2">
-              <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3">
-              <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4">
+              <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1" name="answerA">
+              <input v-model="question.answerB" class="form-control mb-1" type="text" placeholder="Answer 2" name="answerB">
+              <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3" name="answerC">
+              <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4" name="answerD">
               <label>Correct answer</label>
-              <div>
+              <div name="correctAnswer">
                 <div class="form-check form-check-inline">
                   <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerA" value="0">
                   <label class="form-check-label" for="radioAnswerA">A</label>
@@ -141,7 +141,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="submit" name="submit" class="btn btn-success" >Submit</button>
             </div>
           </form>
         </div>
