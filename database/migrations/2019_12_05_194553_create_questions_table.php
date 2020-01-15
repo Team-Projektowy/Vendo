@@ -15,16 +15,10 @@ class CreateQuestionsTable extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('textOfQuestion');
-            $table->string('answerA');
-            $table->string('answerB');
-            $table->string('answerC');
-            $table->string('answerD');
-            $table->char('correctAnswer');
+            $table->string('text');
             $table->integer('category')->unsigned();
             $table->foreign('category')->references('id')->on('categories');
-            $table->integer('language')->unsigned();
-            $table->foreign('language')->references('id')->on('languages');
+            $table->string('language');
             $table->integer('added_by_user')->unsigned();
             $table->foreign('added_by_user')->references('id')->on('users');
             $table->integer('accepted_by_user')->unsigned();

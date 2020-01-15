@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuizzesTable extends Migration
+class CreateQuestionsToConfirmsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateQuizzesTable extends Migration
      */
     public function up()
     {
-        Schema::create('quizzes', function (Blueprint $table) {
+        Schema::create('questionsToConfirm', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('description');
+            $table->string('text');
+            // $table->integer('category')->unsigned();
+            // $table->foreign('category')->references('id')->on('categories');
+            // $table->string('language')->unsigned();
             // $table->integer('added_by_user')->unsigned();
             // $table->foreign('added_by_user')->references('id')->on('users');
-            // $table->integer('accepted_by_user')->unsigned();
-            // $table->foreign('accepted_by_user')->references('id')->on('users');
-            // $table->integer('language')->unsigned();
-            // $table->foreign('language')->references('id')->on('languages');
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ class CreateQuizzesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quizzes');
+        Schema::dropIfExists('questions_to_confirms');
     }
 }
