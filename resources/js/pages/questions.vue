@@ -106,19 +106,19 @@
               <i aria-hidden="true" class="fas fa-times"></i>
             </button>
           </div>
-          <form @submit.prevent="addQuestion" action="\questions\store" method="POST">
+          <form @submit.prevent="addQuestion">
             <div class="modal-body py-3">
               <label for="textOfQuestion">Question</label>
-              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question" name="textOfQuestion">
+              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
               <label for="category">Category</label>
               <select v-model="question.category" class="form-control mb-2">
                 <option v-for="category in categoriesWithoutAll" v-bind:key="category">{{ category }}</option>
               </select>
               <label>Answers</label>
-              <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1" name="answerA">
-              <input v-model="question.answerB" class="form-control mb-1" type="text" placeholder="Answer 2" name="answerB">
-              <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3" name="answerC">
-              <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4" name="answerD">
+              <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
+              <input v-model="question.answerB" class="form-control mb-1" type="text" placeholder="Answer 2">
+              <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3">
+              <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4">
               <label>Correct answer</label>
               <div name="correctAnswer">
                 <div class="form-check form-check-inline">
