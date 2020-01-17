@@ -131,4 +131,11 @@ class QuestionController extends Controller
         }
     }
 
+    public function createQuiz($category, $numberOfQuestions) {
+
+        $questions = Question::where("category", $category)->get();
+
+        return QuestionResource::collection($questions)->random($numberOfQuestions);
+    }
+
 }
