@@ -18,11 +18,14 @@ class CreateQuestionsTable extends Migration
             $table->string('text');
             $table->integer('category')->unsigned();
             $table->foreign('category')->references('id')->on('categories');
+            $table->string('answerA');
+            $table->string('answerB');
+            $table->string('answerC');
+            $table->string('answerD');
+            $table->integer('correctAnswer');
             $table->string('language');
             $table->integer('added_by_user')->unsigned();
             $table->foreign('added_by_user')->references('id')->on('users');
-            $table->integer('accepted_by_user')->unsigned();
-            $table->foreign('accepted_by_user')->references('id')->on('users');
             $table->timestamps();
         });
     }

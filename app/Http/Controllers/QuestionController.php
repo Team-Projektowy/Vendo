@@ -24,14 +24,13 @@ class QuestionController extends Controller
 
     public function indexByCategory($category)
     {
-        $category = ucfirst($category);
-        $questions = Question::where('category', ucfirst($category))->paginate(15);
+        $questions = Question::where('category', $category)->paginate(15);
         return QuestionResource::collection($questions);
     }
 
     public function indexBySearch($search)
     {
-        $questions = Question::where('textOfQuestion', 'like', '%' . $search . '%')->paginate(15);
+        $questions = Question::where('text', 'like', '%' . $search . '%')->paginate(15);
         return QuestionResource::collection($questions);
     }
 
@@ -55,13 +54,15 @@ class QuestionController extends Controller
     {
         $question = new Question;
 
-        $question->textOfQuestion = $request->input('textOfQuestion');
+        $question->text = $request->input('text');
         $question->answerA = $request->input('answerA');
         $question->answerB = $request->input('answerB');
         $question->answerC = $request->input('answerC');
         $question->answerD = $request->input('answerD');
         $question->correctAnswer = $request->input('correctAnswer');
         $question->category = $request->input('category');
+        $question->language = $request->input('language');
+        $question->added_by_user = $request->input('added_by_user');
 
         if ($question->save()) {
             return new QuestionResource($question);
@@ -103,7 +104,7 @@ class QuestionController extends Controller
     {
         $question = Question::findOrFail($id);
 
-        $question->textOfQuestion = $request->input('textOfQuestion');
+        $question->text = $request->input('text');
         $question->answerA = $request->input('answerA');
         $question->answerB = $request->input('answerB');
         $question->answerC = $request->input('answerC');
@@ -129,6 +130,13 @@ class QuestionController extends Controller
         if($question->delete()) {
             return new QuestionResource($question);
         }
+    }
+
+    public function createQuiz($category, $numberOfQuestions) {
+
+        $questions = Question::where("category", $category)->get();
+
+        return QuestionResource::collection($questions)->random($numberOfQuestions);
     }
 
 }

@@ -4,8 +4,8 @@
 
     <div class="d-flex justify-content-between align-items-center">
       <ul class="nav nav-tabs mb-1">
-        <li v-for="category in categories" :key="category" class="nav-item">
-          <a :class="{ active: activeCategory == category }" @click="fetchQuestionsByCategory(category)" class="nav-link" href='#'>{{ category }}</a>
+        <li v-for="category in categories" :key="category.id" class="nav-item">
+          <a :class="{ active: activeCategory == category.id }" @click="fetchQuestionsByCategory(category.id)" class="nav-link" href='#'>{{ category.name }}</a>
         </li>
       </ul>
       <div class="form-inline md-form form-sm mt-0">
@@ -26,7 +26,7 @@
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
         <h6 class="mb-0">
-            {{ question.textOfQuestion }}
+            {{ question.text }}
         </h6>
         <div>
           <button @click="setQuestionToDelete(question)" class="btn btn-link" style="color: var(--danger)" data-toggle="modal" data-target="#deleteQuestionModal">
@@ -108,11 +108,11 @@
           </div>
           <form @submit.prevent="addQuestion">
             <div class="modal-body py-3">
-              <label for="textOfQuestion">Question</label>
-              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
+              <label for="text">Question</label>
+              <input v-model="question.text" class="form-control mb-2" type="text" placeholder="Question">
               <label for="category">Category</label>
               <select v-model="question.category" class="form-control mb-2">
-                <option v-for="category in categoriesWithoutAll" v-bind:key="category">{{ category }}</option>
+                <option v-for="category in categoriesWithoutAll" v-bind:key="category.id" :value="category.id">{{ category.name }}</option>
               </select>
               <label>Answers</label>
               <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
@@ -141,7 +141,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-              <button type="submit" name="submit" class="btn btn-success" >Submit</button>
+              <button type="submit" name="submit" class="btn btn-success">Submit</button>
             </div>
           </form>
         </div>
@@ -169,20 +169,22 @@ export default {
       questions: [],
       question: {
         id: '',
-        textOfQuestion: '',
+        text: '',
         answerA: '',
         answerB: '',
         answerC: '',
         answerD: '',
-        correctAnswer: ''
+        correctAnswer: '',
+        language: '',
+        added_by_user: ''
       },
       // question_id: '',
       pagination: {},
 
       activeQuestions: [],
 
-      categories: ['All', 'Animals', 'History', 'Geography', 'Chemistry', 'Art'],
-      activeCategory: 'All',
+      categories: [],
+      activeCategory: -1,
 
       search: '',
       questionToDelete: {},
@@ -200,6 +202,7 @@ export default {
   },
 
   created() {
+    this.fetchCategories();
     this.fetchQuestionsByCategory(this.activeCategory);
     this.debouncedFetchQuestionBySearch = _.debounce(this.fetchQuestionsBySearch, 500);
   },
@@ -214,6 +217,19 @@ export default {
   },
 
   methods: {
+    fetchCategories() {
+      fetch('/api/categories')
+        .then(res => res.json())
+        .then(res => {
+          this.categories = res.data
+          this.categories.unshift({
+            "id": -1,
+            "name": "All"
+          })
+        })
+        .catch(err => console.log(err))
+    },
+
     fetchQuestions(page_url) {
       let vm = this;
       fetch(page_url)
@@ -230,7 +246,7 @@ export default {
       this.activeCategory = category;
       let vm = this;
       page_url = page_url || '/api/questions';
-      if (category != 'All') {
+      if (category != -1) {
         page_url += '/' + category;
       }
       fetch(page_url)
@@ -288,6 +304,8 @@ export default {
     },
 
     addQuestion() {
+      this.question.language = "en"
+      this.question.added_by_user = "10"
       fetch('/api/question', {
         method: 'post',
         body: JSON.stringify(this.question),
@@ -297,12 +315,15 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        this.question.textOfQuestion = '';
+        this.question.text = '';
         this.question.category = '';
         this.question.answerA = '';
         this.question.answerB = '';
         this.question.answerC = '';
         this.question.answerD = '';
+        this.question.correctAnswer = '';
+        this.question.language = '';
+        this.question.added_by_user = 10;
         $("#addQuestionModal .close").click();
         this.fetchQuestions(this.current_page_url);
       })
