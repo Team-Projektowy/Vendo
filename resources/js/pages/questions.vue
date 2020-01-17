@@ -108,11 +108,11 @@
           </div>
           <form @submit.prevent="addQuestion">
             <div class="modal-body py-3">
-              <label for="textOfQuestion">Question</label>
-              <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
+              <label for="text">Question</label>
+              <input v-model="question.text" class="form-control mb-2" type="text" placeholder="Question">
               <label for="category">Category</label>
               <select v-model="question.category" class="form-control mb-2">
-                <option v-for="category in categoriesWithoutAll" v-bind:key="category.id">{{ category.name }}</option>
+                <option v-for="category in categoriesWithoutAll" v-bind:key="category.id" :value="category.id">{{ category.name }}</option>
               </select>
               <label>Answers</label>
               <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
@@ -141,7 +141,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-              <button type="submit" name="submit" class="btn btn-success" >Submit</button>
+              <button type="submit" name="submit" class="btn btn-success">Submit</button>
             </div>
           </form>
         </div>
@@ -174,7 +174,9 @@ export default {
         answerB: '',
         answerC: '',
         answerD: '',
-        correctAnswer: ''
+        correctAnswer: '',
+        language: '',
+        added_by_user: ''
       },
       // question_id: '',
       pagination: {},
@@ -302,6 +304,8 @@ export default {
     },
 
     addQuestion() {
+      this.question.language = "en"
+      this.question.added_by_user = "10"
       fetch('/api/question', {
         method: 'post',
         body: JSON.stringify(this.question),
@@ -317,6 +321,9 @@ export default {
         this.question.answerB = '';
         this.question.answerC = '';
         this.question.answerD = '';
+        this.question.correctAnswer = '';
+        this.question.language = '';
+        this.question.added_by_user = 10;
         $("#addQuestionModal .close").click();
         this.fetchQuestions(this.current_page_url);
       })
