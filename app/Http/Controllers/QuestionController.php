@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Question;
+use App\Category;
 use App\Http\Resources\Question as QuestionResource;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -24,8 +25,7 @@ class QuestionController extends Controller
 
     public function indexByCategory($category)
     {
-        $category = ucfirst($category);
-        $questions = Question::where('category', ucfirst($category))->paginate(15);
+        $questions = Question::where('category', $category)->paginate(15);
         return QuestionResource::collection($questions);
     }
 

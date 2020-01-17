@@ -4,8 +4,8 @@
 
     <div class="d-flex justify-content-between align-items-center">
       <ul class="nav nav-tabs mb-1">
-        <li v-for="category in categories" :key="category" class="nav-item">
-          <a :class="{ active: activeCategory == category }" @click="fetchQuestionsByCategory(category)" class="nav-link" href='#'>{{ category }}</a>
+        <li v-for="category in categories" :key="category.id" class="nav-item">
+          <a :class="{ active: activeCategory == category.id }" @click="fetchQuestionsByCategory(category.id)" class="nav-link" href='#'>{{ category.name }}</a>
         </li>
       </ul>
       <div class="form-inline md-form form-sm mt-0">
@@ -26,7 +26,7 @@
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
         <h6 class="mb-0">
-            {{ question.textOfQuestion }}
+            {{ question.text }}
         </h6>
         <div>
           <button @click="setQuestionToDelete(question)" class="btn btn-link" style="color: var(--danger)" data-toggle="modal" data-target="#deleteQuestionModal">
@@ -112,7 +112,7 @@
               <input v-model="question.textOfQuestion" class="form-control mb-2" type="text" placeholder="Question">
               <label for="category">Category</label>
               <select v-model="question.category" class="form-control mb-2">
-                <option v-for="category in categoriesWithoutAll" v-bind:key="category">{{ category }}</option>
+                <option v-for="category in categoriesWithoutAll" v-bind:key="category.id">{{ category.name }}</option>
               </select>
               <label>Answers</label>
               <input v-model="question.answerA" class="form-control mb-1" type="text" placeholder="Answer 1">
@@ -169,7 +169,7 @@ export default {
       questions: [],
       question: {
         id: '',
-        textOfQuestion: '',
+        text: '',
         answerA: '',
         answerB: '',
         answerC: '',
@@ -181,8 +181,8 @@ export default {
 
       activeQuestions: [],
 
-      categories: ['All', 'Animals', 'History', 'Geography', 'Chemistry', 'Art'],
-      activeCategory: 'All',
+      categories: [],
+      activeCategory: -1,
 
       search: '',
       questionToDelete: {},
@@ -200,6 +200,7 @@ export default {
   },
 
   created() {
+    this.fetchCategories();
     this.fetchQuestionsByCategory(this.activeCategory);
     this.debouncedFetchQuestionBySearch = _.debounce(this.fetchQuestionsBySearch, 500);
   },
@@ -214,6 +215,19 @@ export default {
   },
 
   methods: {
+    fetchCategories() {
+      fetch('/api/categories')
+        .then(res => res.json())
+        .then(res => {
+          this.categories = res.data
+          this.categories.unshift({
+            "id": -1,
+            "name": "All"
+          })
+        })
+        .catch(err => console.log(err))
+    },
+
     fetchQuestions(page_url) {
       let vm = this;
       fetch(page_url)
@@ -230,7 +244,7 @@ export default {
       this.activeCategory = category;
       let vm = this;
       page_url = page_url || '/api/questions';
-      if (category != 'All') {
+      if (category != -1) {
         page_url += '/' + category;
       }
       fetch(page_url)
@@ -297,7 +311,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        this.question.textOfQuestion = '';
+        this.question.text = '';
         this.question.category = '';
         this.question.answerA = '';
         this.question.answerB = '';

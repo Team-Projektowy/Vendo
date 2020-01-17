@@ -17,13 +17,15 @@ class Question extends JsonResource
         //return parent::toArray($request);
         return [
             "id" => $this->id,
-            "textOfQuestion" => $this->textOfQuestion,
+            "text" => $this->text,
             "answerA" => $this->answerA,
             "answerB" => $this->answerB,
             "answerC" => $this->answerC,
             "answerD" => $this->answerD,
             "correctAnswer" => $this->correctAnswer,
-            "category" => $this->category
+            "category" => $this->category,
+            "language" => $this->language,
+            "added_by_user" => $this->added_by_user
         ];
     }
 }

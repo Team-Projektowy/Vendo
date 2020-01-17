@@ -11,35 +11,13 @@ $factory->define(App\Question::class, function (Faker $faker) {
         'text' => $faker->text(50),
         'language' => $faker->randomElement(array('en', 'pl')),
         'category' => $faker->randomElement($categories),
+        'answerA' => $faker->text(10),
+        'answerB' => $faker->text(10),
+        'answerC' => $faker->text(10),
+        'answerD' => $faker->text(10),
+        'correctAnswer' => $faker->numberBetween(0, 3),
         'added_by_user' => function () {
             return factory(App\User::class)->create()->id;
         }
     ];
-});
-
-$factory->afterCreating(App\Question::class, function ($question, $faker) {
-    $id = $question->id;
-
-    $question->answers()->createMany([
-    [
-        'text' => $faker->text(20),
-        'isCorrect' => 0,
-        'question_id' => $id
-    ],
-    [
-        'text' => $faker->text(20),
-        'isCorrect' => 0,
-        'question_id' => $id
-    ],
-    [
-        'text' => $faker->text(20),
-        'isCorrect' => 0,
-        'question_id' => $id
-    ],
-    [
-        'text' => $faker->text(20),
-        'isCorrect' => 1,
-        'question_id' => $id
-    ]
-    ]);
 });
