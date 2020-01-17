@@ -21,8 +21,8 @@ class CreateQuestionsTable extends Migration
             $table->string('language');
             $table->integer('added_by_user')->unsigned();
             $table->foreign('added_by_user')->references('id')->on('users');
-            $table->integer('accepted_by_user')->unsigned();
-            $table->foreign('accepted_by_user')->references('id')->on('users');
+            // $table->integer('accepted_by_user')->unsigned();
+            // $table->foreign('accepted_by_user')->references('id')->on('users');
             $table->timestamps();
         });
     }
