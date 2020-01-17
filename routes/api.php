@@ -38,6 +38,8 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::get('oauth/{driver}/callback', 'Auth\OAuthController@handleProviderCallback')->name('oauth.callback');
 });
 
+// Route::resource('question', 'QuestionController');
+
 Route::get('questions', 'QuestionController@index');
 Route::get('questions/{category}', 'QuestionController@indexByCategory');
 Route::get('questions/bySearch/{search}', 'QuestionController@indexBySearch');

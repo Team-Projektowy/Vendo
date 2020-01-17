@@ -120,7 +120,7 @@
               <input v-model="question.answerC" class="form-control mb-1" type="text" placeholder="Answer 3">
               <input v-model="question.answerD" class="form-control mb-1" type="text" placeholder="Answer 4">
               <label>Correct answer</label>
-              <div>
+              <div name="correctAnswer">
                 <div class="form-check form-check-inline">
                   <input v-model="question.correctAnswer" class="form-check-input" type="radio" id="radioAnswerA" value="0">
                   <label class="form-check-label" for="radioAnswerA">A</label>
@@ -141,7 +141,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="submit" name="submit" class="btn btn-success" >Submit</button>
             </div>
           </form>
         </div>

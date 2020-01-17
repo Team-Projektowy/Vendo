@@ -17,8 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('description');
-            $table->integer('language')->unsigned();
-            $table->foreign('language')->references('id')->on('languages');
+            $table->string('language');
             $table->timestamps();
         });
     }
