@@ -19,3 +19,26 @@
 .nav-link:hover {
   color: #007E33;
 }
+
+.carousel {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.carousel-control {
+  width: 0%;
+}
+
+.carousel-control-next {
+  margin-right: -15%;
+}
+
+.carousel-control-prev {
+  margin-left: -15%;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    filter: invert(100%);
+}
+

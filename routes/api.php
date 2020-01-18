@@ -50,3 +50,4 @@ Route::delete('question/{id}', 'QuestionController@destroy');
 Route::get('categories', 'CategoryController@get');
 Route::get('quiz/{category}/{numberOfQuestions}', 'QuestionController@createQuiz');
 Route::get('categories/image', 'CategoryController@getImages');
+Route::post('quiz', 'QuestionController@checkQuiz');
