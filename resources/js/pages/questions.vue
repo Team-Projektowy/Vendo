@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:auto">
     <h2 class="mb-4">Questions</h2>
 
     <div class="d-flex justify-content-between align-items-center">

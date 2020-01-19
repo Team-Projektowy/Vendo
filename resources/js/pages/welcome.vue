@@ -1,33 +1,41 @@
 <template>
-  <div class='row'>
-    <div class="col-12">
-        <h1 class="my-4">Pick a Quiz</h1>
-        <ul class="nav nav-tabs mb-1" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#" role="tab" aria-controls="home" aria-selected="true">Animals</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#" role="tab" aria-controls="profile" aria-selected="false">History</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#" role="tab" aria-controls="contact" aria-selected="false">Geography</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#" role="tab" aria-controls="contact" aria-selected="false">Chemistry</a>
-            </li>   
-            <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#" role="tab" aria-controls="contact" aria-selected="false">Art</a>
-            </li>             
-        </ul>
+  <div>
+    <div class='row'>
+      <div class="col-12">
+          <h1 class="my-4">Pick a Quiz</h1>
+      </div>
+      <div v-for="category in categories" v-bind:key="category.id" class="col-sm-6 col-lg-4 mb-4">
+          <div class="card card-animated mx-1" style="cursor: pointer" @click="chooseCategory(category)" data-toggle="modal" data-target="#takeQuizModal">
+              <img class="card-img-top" alt="Card image cap" :src="images[category.id-1].link">
+              <div class="card-body">
+              <p class="card-text text-center">{{ category.name }}</p>
+              </div>
+          </div>
+      </div>
     </div>
-    <div v-for="item in items" v-bind:key="item" class="col-sm-6 col-lg-4 mb-4">
-        <div class="card card-animated mx-1" style="cursor: pointer">
-            <img class="card-img-top" src="https://images.unsplash.com/photo-1497752531616-c3afd9760a11?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" alt="Card image cap">
-            <div class="card-body">
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-        </div>  
-    </div>        
+    <div class="modal fade" id="takeQuizModal" tabindex="-1" role="dialog" aria-labelledby="takeQuizModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-dark d-flex align-items-center">
+            <h5 class="modal-title text-light" id="takeQuizModalTitle">Take a quiz</h5>
+            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+              <i aria-hidden="true" class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body py-3">
+            Category: {{ this.chosenCategory.name }}<br/>
+            <label>Number of questions</label>
+            <input v-model="chosenNumberOfQuestions" class="form-control" type="number" min="5" max="10">
+          </div>
+          <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <router-link data-dismiss="modal" :to="{ name: 'quiz', params: { category: this.chosenCategory.id, numberOfQuestions: this.chosenNumberOfQuestions  } }" class="nav-link" active-class="active">
+              <button type="button" class="btn btn-success">Go</button>
+            </router-link>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,12 +51,45 @@ export default {
 
   data: () => ({
     title: window.config.appName,
-    items: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    categories: [],
+    images:[],
+    chosenCategory: {},
+    chosenNumberOfQuestions: 10,
+    chosenTime: 5
   }),
 
   computed: mapGetters({
-    authenticated: 'auth/check'
-  })
+    authenticated: 'auth/check',
+  }),
+
+  created() {
+    this.fetchCategories();
+    this.fetchImages();
+  },
+
+  methods: {
+    fetchCategories() {
+      fetch('/api/categories')
+        .then(res => res.json())
+        .then(res => {
+          this.categories = res.data
+        })
+        .catch(err => console.log(err))
+    },
+
+    fetchImages() {
+      fetch('/api/categories/image')
+        .then(res => res.json())
+        .then(res => {
+          this.images = res.data
+        })
+        .catch(err => console.log(err))
+    },
+
+    chooseCategory(category) {
+      this.chosenCategory = category;
+    }
+  }
 }
 </script>
 

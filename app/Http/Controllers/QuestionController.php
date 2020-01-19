@@ -135,8 +135,20 @@ class QuestionController extends Controller
     public function createQuiz($category, $numberOfQuestions) {
 
         $questions = Question::where("category", $category)->get();
-
-        return QuestionResource::collection($questions)->random($numberOfQuestions);
+        $quiz = QuestionResource::collection($questions)->random($numberOfQuestions);
+        return ["data" => $quiz];
     }
 
+    public function checkQuiz(Request $request) {
+        $input = $request->input();
+        $questions = [];
+
+        foreach ($input as $id => $answer) {
+            $question = Question::findOrFail($id);
+            $question->userAnswer = $answer;
+            array_push($questions, $question->toDTO());
+        }
+
+        return ["data" => $questions];
+    }
 }
