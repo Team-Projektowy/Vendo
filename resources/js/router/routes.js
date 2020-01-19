@@ -5,7 +5,8 @@ function page (path) {
 export default [
   { path: '/', name: 'welcome', component: page('welcome.vue') },
   { path: '/questions', name: 'questions', component: page('questions.vue') },
-  { path: '/quiz/:category/:numberOfQuestions/:time', name: 'quiz', component: page('quiz.vue') },
+  { path: '/quiz/:category/:numberOfQuestions', name: 'quiz', component: page('quiz.vue') },
+  { path: '/quiz/results/:answers', name: 'results', component: page('results.vue')},
   { path: '/login', name: 'login', component: page('auth/login.vue') },
   { path: '/register', name: 'register', component: page('auth/register.vue') },
   { path: '/password/reset', name: 'password.request', component: page('auth/password/email.vue') },

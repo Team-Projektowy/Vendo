@@ -12,9 +12,9 @@ class Question extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
+
     public function toArray($request)
     {
-        //return parent::toArray($request);
         return [
             "id" => $this->id,
             "text" => $this->text,
@@ -25,7 +25,7 @@ class Question extends JsonResource
             "correctAnswer" => $this->correctAnswer,
             "category" => $this->category,
             "language" => $this->language,
-            "added_by_user" => $this->added_by_user
+            "added_by_user" => $this->added_by_user,
         ];
     }
 }

@@ -139,4 +139,16 @@ class QuestionController extends Controller
         return ["data" => $quiz];
     }
 
+    public function checkQuiz(Request $request) {
+        $input = $request->input();
+        $questions = [];
+
+        foreach ($input as $id => $answer) {
+            $question = Question::findOrFail($id);
+            $question->userAnswer = $answer;
+            array_push($questions, $question->toDTO());
+        }
+
+        return ["data" => $questions];
+    }
 }

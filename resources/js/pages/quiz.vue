@@ -45,7 +45,9 @@
       </div>
     </div>
     <div class="d-flex justify-content-center">
-      <button class="btn btn-success" @click="checkQuiz()">Submit</button>
+      <router-link :to="{ name: 'results', params: { answers: this.answers }}" class="nav-link" active-class="active">
+        <button class="btn btn-success">Submit</button>
+      </router-link>
     </div>
   </div>
 
@@ -63,6 +65,8 @@ export default {
     return {
       questions: [],
       // answers: Array(parseInt(this.$route.params.numberOfQuestions)).fill(-1)
+      // answers: {},
+      numberCorrect: 0,
       answers: {}
     }
   },
@@ -77,49 +81,51 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.questions = res.data
+          for (const i in this.questions) {
+          console.log(this.questions[i].id)
+          this.answers[this.questions[i].id] = "-1"
+          }
         })
         .catch(err => console.log(err))
-
-        this.answers.number = this.$route.params.numberOfQuestions
+        // this.answers.number = this.$route.params.numberOfQuestions
     },
 
-    answerToQuestion(question_id, answer_id) {
-      this.answers[question_id] = answer_id;
+    // answerToQuestion(question_id, answer_id) {
+    //   this.answers[question_id] = answer_id;
+    // },
+
+    checkQuiz() {
+      fetch('/api/quiz', {
+        method: 'post',
+        body: JSON.stringify(this.answers),
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .catch(err => console.log(err))
     },
 
     // checkQuiz() {
-    //   fetch('/api/quiz', {
-    //     method: 'post',
-    //     body: JSON.stringify(this.answers),
-    //     headers: {
-    //       'content-type': 'application/json'
-    //     }
-    //   })
-    //   .then(res => res.json())
-    //   .catch(err => console.log(err))
+    //   let correctAnswers = {};
+
+    //   console.log("Correct answers")
+    //   for (const question in this.questions) {
+    //     correctAnswers[this.questions[question].id] = this.questions[question].correctAnswer.toString();
+    //     console.log(this.questions[question].correctAnswer.toString());
+    //   }
+
+    //   console.log("User answers")
+    //   for (const answer in this.answers) {
+    //     console.log(this.answers[answer])
+    //   }
+
+    //   for (const id in correctAnswers){
+    //     if (correctAnswers[id] == this.answers[id])
+    //       this.numberCorrect++;
+    //   }
+    //   console.log("Number correct " + this.numberCorrect)
     // }
-
-    checkQuiz() {
-      let correctAnswers = {};
-      let numberCorrect = 0;
-
-      console.log("Correct answers")
-      for (const question in this.questions) {
-        correctAnswers[this.questions[question].id] = this.questions[question].correctAnswer.toString();
-        console.log(this.questions[question].correctAnswer.toString());
-      }
-
-      console.log("User answers")
-      for (const answer in this.answers) {
-        console.log(this.answers[answer])
-      }
-
-      for (const id in correctAnswers){
-        if (correctAnswers[id] == this.answers[id])
-          numberCorrect++;
-      }
-      console.log("Number correct " + numberCorrect)
-    }
   }
 }
 </script>
