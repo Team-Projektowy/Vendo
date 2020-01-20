@@ -22,6 +22,13 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');
+    Route::get('questions', 'QuestionController@index');
+    Route::get('questions/{category}', 'QuestionController@indexByCategory');
+    Route::get('questions/bySearch/{search}', 'QuestionController@indexBySearch');
+    Route::get('question/{id}', 'QuestionController@show');
+    Route::post('question', 'QuestionController@store');
+    Route::put('question/{id}', 'QuestionController@update');
+    Route::delete('question/{id}', 'QuestionController@destroy');
 });
 
 Route::group(['middleware' => 'guest:api'], function () {
@@ -40,13 +47,6 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 // Route::resource('question', 'QuestionController');
 
-Route::get('questions', 'QuestionController@index');
-Route::get('questions/{category}', 'QuestionController@indexByCategory');
-Route::get('questions/bySearch/{search}', 'QuestionController@indexBySearch');
-Route::get('question/{id}', 'QuestionController@show');
-Route::post('question', 'QuestionController@store');
-Route::put('question/{id}', 'QuestionController@update');
-Route::delete('question/{id}', 'QuestionController@destroy');
 Route::get('categories', 'CategoryController@get');
 Route::get('quiz/{category}/{numberOfQuestions}', 'QuestionController@createQuiz');
 Route::get('categories/image', 'CategoryController@getImages');
