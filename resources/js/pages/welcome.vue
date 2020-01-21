@@ -23,14 +23,15 @@
             </button>
           </div>
           <div class="modal-body py-3">
-            Category: {{ this.chosenCategory.name }}<br/>
+            <h6>{{ this.chosenCategory.name }}</h6><br/>
             <label>Number of questions</label>
-            <input v-model="chosenNumberOfQuestions" class="form-control" type="number" min="5" max="10">
+            <input v-model="chosenNumberOfQuestions" @change="checkNumber()" class="form-control" type="number" min="5" max="10">
+            <p class="mt-2 mb-0 text-danger">{{ takeQuizError }}</p>
           </div>
           <div class="modal-footer d-flex justify-content-between">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             <router-link data-dismiss="modal" :to="{ name: 'quiz', params: { category: this.chosenCategory.id, numberOfQuestions: this.chosenNumberOfQuestions  } }" class="nav-link" active-class="active">
-              <button type="button" class="btn btn-success">Go</button>
+              <button type="button" class="btn btn-success" :class="{'disabled': takeQuizError != ''}" :disabled="takeQuizError != ''">Go</button>
             </router-link>
           </div>
         </div>
@@ -55,7 +56,7 @@ export default {
     images:[],
     chosenCategory: {},
     chosenNumberOfQuestions: 10,
-    chosenTime: 5
+    takeQuizError: ""
   }),
 
   computed: mapGetters({
@@ -88,6 +89,16 @@ export default {
 
     chooseCategory(category) {
       this.chosenCategory = category;
+    },
+
+    checkNumber() {
+      if (Number.isInteger(this.chosenNumberOfQuestions)) {
+        this.takeQuizError = "This is not a number. Please specify any number between 5 and 10."
+      } else if (this.chosenNumberOfQuestions < 5 || this.chosenNumberOfQuestions > 10) {
+        this.takeQuizError = "Please specify any number between 5 and 10."
+      } else {
+        this.takeQuizError = ""
+      }
     }
   }
 }
