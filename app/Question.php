@@ -19,6 +19,11 @@ class Question extends Model
         return $this->userAnswer;
     }
 
+    public function users()
+    {
+      return $this->hasMany(User::class, 'id', 'added_by_user');
+    }
+
     public function toDTO()
     {
         return [

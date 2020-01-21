@@ -18,20 +18,21 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $questions = Question::paginate(15);
-        return QuestionResource::collection($questions);
+        $questions = Question::with('users')->paginate(15);
+        return $questions;
     }
 
     public function indexByCategory($category)
     {
-        $questions = Question::where('category', $category)->paginate(15);
-        return QuestionResource::collection($questions);
+        $questions = Question::with('users')->where('category', $category)->paginate(15);
+        // $questions = Question::where('category', $category)->paginate(15);
+        return $questions;
     }
 
     public function indexBySearch($search)
     {
-        $questions = Question::where('text', 'like', '%' . $search . '%')->paginate(15);
-        return QuestionResource::collection($questions);
+        $questions = Question::with('users')->where('text', 'like', '%' . $search . '%')->paginate(15);
+        return $questions;
     }
 
     /**

@@ -13,6 +13,11 @@ class Question extends JsonResource
      * @return array
      */
 
+    public function users()
+    {
+      return $this->hasMany('App\User'::class, 'id', 'added_by_user');
+    }
+
     public function toArray($request)
     {
         return [

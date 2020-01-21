@@ -2,7 +2,7 @@
   <div style="height:auto">
     <h2 class="mb-4">Questions</h2>
 
-    <div class="d-flex justify-content-between align-items-center">
+    <div id="questions-header" class="d-flex justify-content-between align-items-center">
       <ul class="nav nav-tabs mb-1">
         <li v-for="category in categories" :key="category.id" class="nav-item">
           <a :class="{ active: activeCategory == category.id }" @click="fetchQuestionsByCategory(category.id)" class="nav-link" href='#'>{{ category.name }}</a>
@@ -15,7 +15,7 @@
               <i class="fas fa-search" aria-hidden="true"></i>
             </span>
           </div>
-          <input v-model="search" class="form-control form-control" type="text" placeholder="Search" aria-label="Search">
+          <input id="questions-search-bar" v-model="search" class="form-control form-control" type="text" placeholder="Search" aria-label="Search">
         </div>
         <button class="btn btn-outline-success" data-toggle="modal" data-target="#addQuestionModal">
           <i class="fas fa-plus"></i> Add
@@ -29,10 +29,10 @@
             {{ question.text }}
         </h6>
         <div>
-          <button @click="setQuestionToDelete(question)" class="btn btn-link" style="color: var(--danger)" data-toggle="modal" data-target="#deleteQuestionModal">
+          <button @click="setQuestionToDelete(question)" class="btn btn-link question-icon" data-toggle="modal" data-target="#deleteQuestionModal">
             <i class="fas fa-trash-alt"></i>
           </button>
-          <button @click="changeActive(question.id)" class="btn btn-link" style="color: var(--success)" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
+          <button @click="changeActive(question.id)" class="btn btn-link question-icon" data-toggle="collapse" :data-target="'#collapse' + question.id" aria-expanded="false" :aria-controls="'collapse' + question.id">
             <i class="fas" :class="{ 'fa-chevron-down': !activeQuestions.includes(question.id), 'fa-chevron-up': activeQuestions.includes(question.id) }"></i>
           </button>
         </div>
@@ -54,6 +54,7 @@
               {{ question.answerD }}
             </li>
           </ul>
+          <p class="mt-3 mb-0">Added by user: {{ question.users[0].name }}</p>
         </div>
       </div>
     </div>
@@ -162,7 +163,7 @@ export default {
   },
 
   computed: mapGetters({
-    authenticated: 'auth/check'
+    authenticated: 'auth/check',
   }),
 
   data() {
@@ -191,6 +192,8 @@ export default {
       questionToDelete: {},
       current_page_url: '',
 
+      user: [],
+
       changeActive(questionId) {
         let indexInArray = this.activeQuestions.indexOf(questionId);
         if (indexInArray > -1) {
@@ -205,6 +208,7 @@ export default {
   created() {
     this.fetchCategories();
     this.fetchQuestionsByCategory(this.activeCategory);
+    this.fetchUser();
     this.debouncedFetchQuestionBySearch = _.debounce(this.fetchQuestionsBySearch, 500);
   },
 
@@ -237,7 +241,7 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.questions = res.data;
-          vm.makePagination(res.meta, res.links);
+          vm.makePagination(res);
         })
         .catch(err => console.log(err))
       this.current_page_url = page_url;
@@ -254,18 +258,27 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.questions = res.data;
-          vm.makePagination(res.meta, res.links);
+          vm.makePagination(res);
         })
         .catch(err => console.log(err))
         this.current_page_url = page_url;
     },
 
-    makePagination(meta, links) {
+    fetchUser() {
+      fetch('api/user')
+      .then(res => res.json())
+      .then(res => {
+        this.user = res
+      })
+      .catch(err => console.log(err))
+    },
+
+    makePagination(res) {
       let pagination = {
-        current_page: meta.current_page,
-        last_page: meta.last_page,
-        next_page_url: links.next,
-        prev_page_url: links.prev
+        current_page: Math.ceil(res.to / 15.0),
+        last_page: res.last_page,
+        next_page_url: res.next_page_url,
+        prev_page_url: res.prev_page_url
       }
       if (pagination.last_page == null) {
         pagination.last_page = 1;
@@ -281,7 +294,7 @@ export default {
           .then(res => res.json())
           .then(res => {
             this.questions = res.data;
-            vm.makePagination(res.meta, res.links);
+            vm.makePagination(res);
           })
           .catch(err => console.log(err))
         this.current_page_url = page_url
@@ -306,7 +319,7 @@ export default {
 
     addQuestion() {
       this.question.language = "en"
-      this.question.added_by_user = "10"
+      this.question.added_by_user = this.user.id
       fetch('/api/question', {
         method: 'post',
         body: JSON.stringify(this.question),
@@ -324,7 +337,7 @@ export default {
         this.question.answerD = '';
         this.question.correctAnswer = '';
         this.question.language = '';
-        this.question.added_by_user = 10;
+        this.question.added_by_user = this.user.id;
         $("#addQuestionModal .close").click();
         this.fetchQuestions(this.current_page_url);
       })
@@ -339,7 +352,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>
