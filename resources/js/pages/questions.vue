@@ -142,7 +142,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-              <button type="submit" name="submit" class="btn btn-success">Submit</button>
+              <button type="submit" name="submit" class="btn btn-success" :disabled="!validateForm()">Submit</button>
             </div>
           </form>
         </div>
@@ -342,6 +342,18 @@ export default {
         this.fetchQuestions(this.current_page_url);
       })
       .catch(err => console.log(err))
+    },
+
+    validateForm() {
+      if (this.question.text.replace(/\s/g, "").length < 10 ||
+          this.question.answerA.replace(/\s/g, "").length < 1 ||
+          this.question.answerB.replace(/\s/g, "").length < 1 ||
+          this.question.answerC.replace(/\s/g, "").length < 1 ||
+          this.question.answerD.replace(/\s/g, "").length < 1 ||
+          this.question.correctAnswer == '') {
+        return false;
+      }
+      return true;
     }
   },
 
