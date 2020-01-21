@@ -64,9 +64,6 @@ export default {
   data() {
     return {
       questions: [],
-      // answers: Array(parseInt(this.$route.params.numberOfQuestions)).fill(-1)
-      // answers: {},
-      numberCorrect: 0,
       answers: {}
     }
   },

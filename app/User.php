@@ -105,4 +105,9 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     {
         return [];
     }
+
+    public function questions()
+    {
+      return $this->belongsTo(Question::class, 'id');
+    }
 }

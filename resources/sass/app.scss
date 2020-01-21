@@ -13,7 +13,7 @@
 }
 
 .nav-link {
-  color: var(--success);
+  color: #28a745;
 }
 
 .nav-link:hover {
@@ -42,3 +42,21 @@
     filter: invert(100%);
 }
 
+.question-icon {
+  color: #343a40;
+}
+
+.question-icon:hover {
+  color: #007E33;
+}
+
+@media (max-width: 990px) {
+  #questions-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #questions-search-bar {
+    max-width: 70%;
+  }
+}
