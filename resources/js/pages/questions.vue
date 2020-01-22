@@ -9,7 +9,7 @@
         </li>
       </ul>
       <div class="form-inline md-form form-sm mt-0">
-        <div class="input-group mx-2">
+        <div class="input-group mx-2 search-bar">
           <div class="input-group-prepend">
             <span class="input-group-text">
               <i class="fas fa-search" aria-hidden="true"></i>
@@ -25,7 +25,7 @@
 
     <div v-for="question in questions" v-bind:key="question.id" class="card">
       <div class="card-header d-flex justify-content-between align-items-center" :id="'heading' + question.id">
-        <h6 class="mb-0">
+        <h6 class="mb-0 question-header">
             {{ question.text }}
         </h6>
         <div>

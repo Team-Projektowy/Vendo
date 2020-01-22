@@ -56,7 +56,16 @@
     align-items: flex-start;
   }
 
-  #questions-search-bar {
+  // #questions-search-bar {
+  //   max-width: 60%;
+  // }
+
+  .question-header {
     max-width: 70%;
+  }
+
+  .search-bar {
+    max-width: 70%;
+    padding-right: 5%;
   }
 }
